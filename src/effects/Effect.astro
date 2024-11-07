@@ -36,123 +36,125 @@
     <button data-state="0" class="font-type train-yellow"><span>ICONS</span> </button>
     <button data-state="1" class="font-type train-blue"> <span>LOGO</span></button>
 		<button data-state="2" class="font-type train-green"><span>PRISM</span></button>
-</div>
- -->
+</div> -->
 
 <script is:inline src="/plugins/effects/imagesloaded.pkgd.min.js"></script>
 <script is:inline src="/plugins/effects/gsap.min.js"></script>
 <script is:inline type="module">
 	import { preloadImages } from '/plugins/effects/utils.js';
 	import { ImageTrail } from '/plugins/effects/imageTrail.js';
-				const images = [
-					'bezier.png',
-					'game.png',
-					'hourglass.png',
-					'image.png',
-					'rocket.png',
-					'compass.png',
-					'battery.png',
-					'lamp.png',
-					'coffee-cup.png',
-					'weather.png'
-				];
-				const logoImages = [
-					'apple.png',
-					'blender.png',
-					'dribbble.png',
-					'figma.png',
-					'github.png',
-					'pin.png',
-					'react.png',
-					'sketch.png',
-					'vue.png',
-					'wechat.png'
-				];
-				const glassImages = [
-					'01.png',
-					'02.png',
-					'03.png',
-					'04.png',
-					'05.png',
-					'06.png',
-					'07.png',
-					'08.png',
-					'09.png',
-					'10.png'
-				];
 
-				const effects = document.querySelector('.effects');
-        const effectsImgs = document.querySelectorAll('.effects__img-inner');
+	const images = [
+		'bezier.png',
+		'game.png',
+		'hourglass.png',
+		'image.png',
+		'rocket.png',
+		'compass.png',
+		'battery.png',
+		'lamp.png',
+		'coffee-cup.png',
+		'weather.png'
+	];
+	const logoImages = [
+		'apple.png',
+		'blender.png',
+		'dribbble.png',
+		'figma.png',
+		'github.png',
+		'pin.png',
+		'react.png',
+		'sketch.png',
+		'vue.png',
+		'wechat.png'
+	];
+	const glassImages = [
+		'01.png',
+		'02.png',
+		'03.png',
+		'04.png',
+		'05.png',
+		'06.png',
+		'07.png',
+		'08.png',
+		'09.png',
+		'10.png'
+	];
 
-				const buttons = document.querySelectorAll('.train-switch button');
-        let currentState = 0; // Default state
+	const effects = document.querySelector('.effects');
+    const effectsImgs = document.querySelectorAll('.effects__img-inner');
 
-        const changeImages = (imagesArr, folderPath) => {
-            effectsImgs.forEach((img, index) => {
-                img.style.backgroundImage = `url(${folderPath}${imagesArr[index]})`;
-            });
-        };
-				const updateEffectsClass = (state) => {
-            effects.className = 'effects'; // Reset class
-            switch (state) {
+	const buttons = document.querySelectorAll('.train-switch button');
+    let currentState = 0; // Default state
+
+    const changeImages = (imagesArr, folderPath) => {
+        effectsImgs.forEach((img, index) => {
+            img.style.backgroundImage = `url(${folderPath}${imagesArr[index]})`;
+        });
+    };
+	const updateEffectsClass = (state) => {
+        effects.className = 'effects'; // Reset class
+        switch (state) {
+            case 0:
+                effects.classList.add('train-icons');
+                break;
+            case 1:
+                effects.classList.add('train-logo');
+                break;
+            case 2:
+                effects.classList.add('train-prism');
+                break;
+            default:
+                effects.classList.add('train-icons');
+        }
+    };
+    preloadImages('.effects__img-inner').then(() => {
+		// AN: Comment the below line to disable mouse-pointer style.
+        // new ImageTrail(document.querySelector('.effects'));
+    });
+
+	buttons[currentState].style.display = 'block';
+	// 修改按钮点击事件
+	let firstClick = true; // 标记是否为第一次点击
+
+	// 统一按钮显示逻辑
+	const updateButtonDisplay = (state) => {
+		const buttons = document.querySelectorAll('.train-switch button');
+		buttons.forEach(button => button.style.display = 'none');
+		const nextStateIndex = (state ) % buttons.length;
+		buttons[nextStateIndex].style.display = 'block';
+	};
+			
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+			if (firstClick) {
+        		// 如果是第一次点击，直接切换到第二种状态
+				currentState = 1;
+				firstClick = false; // 标记为非第一次点击
+			} else {
+				// 否则，基于当前状态循环切换
+				currentState = (currentState + 1) % buttons.length;
+    		}
+
+			updateEffectsClass(currentState);
+
+            switch (currentState) {
                 case 0:
-                    effects.classList.add('train-icons');
+                    changeImages(images, '/assets/effects/3dicons/');
                     break;
                 case 1:
-                    effects.classList.add('train-logo');
+                    changeImages(logoImages, '/assets/effects/logo/');
                     break;
                 case 2:
-                    effects.classList.add('train-prism');
+                    changeImages(glassImages, '/assets/effects/glass-prism/');
                     break;
                 default:
-                    effects.classList.add('train-icons');
+                    changeImages(images, '/assets/effects/3dicons/');
             }
-        };
-        preloadImages('.effects__img-inner').then(() => {
-            new ImageTrail(document.querySelector('.effects'));
+			updateButtonDisplay(currentState);
         });
-
-
-				buttons[currentState].style.display = 'block';
-				// 修改按钮点击事件
-				let firstClick = true; // 标记是否为第一次点击
-
-				// 统一按钮显示逻辑
-				const updateButtonDisplay = (state) => {
-						const buttons = document.querySelectorAll('.train-switch button');
-						buttons.forEach(button => button.style.display = 'none');
-						const nextStateIndex = (state ) % buttons.length;
-						buttons[nextStateIndex].style.display = 'block';
-				};
-
-        buttons.forEach((button) => {
-            button.addEventListener('click', () => {
-							if (firstClick) {
-            // 如果是第一次点击，直接切换到第二种状态
-									currentState = 1;
-									firstClick = false; // 标记为非第一次点击
-							} else {
-									// 否则，基于当前状态循环切换
-									currentState = (currentState + 1) % buttons.length;
-        			}
-							updateEffectsClass(currentState);
-                switch (currentState) {
-                    case 0:
-                        changeImages(images, '/assets/effects/3dicons/');
-                        break;
-                    case 1:
-                        changeImages(logoImages, '/assets/effects/logo/');
-                        break;
-                    case 2:
-                        changeImages(glassImages, '/assets/effects/glass-prism/');
-                        break;
-                    default:
-                        changeImages(images, '/assets/effects/3dicons/');
-                }
-								updateButtonDisplay(currentState);
-            });
-        });
-				updateButtonDisplay(currentState);
+    });
+	updateButtonDisplay(currentState);
 </script>
 <style>
 .train-switch button{
